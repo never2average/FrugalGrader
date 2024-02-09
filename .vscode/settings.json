@@ -1,3 +1,8 @@
 {
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
+    "docify.commentService.programmingLanguage": "python",
+    "docify.commentService.docstringFormat": "Doxygen",
+    "docify.commentService.autoTranslationService": "English",
+    "docify.commentService.sidePanelReviewMode": false,
+    "docify.commentService.moreExpressiveComments": false
 }
