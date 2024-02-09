@@ -1,14 +1,14 @@
-## 🚀🚀 Frugal Grader - Autograding for Private Benchmarks
+## 🚀🚀 Frugal Grader
 
-When evaluating multiple prompts, user interactions and fine tuned models on private benchmark datasets, people often end up using GPT4 Autograding on the final LLM responses. While this makes some sense when reviewing performance manually, the approach is stupid and expensive to scale out.
+While there are many public benchmarks available for foundational models on [hf.co](hf.co), dev teams need to provide benchmarks on private data+RAG strategies+fine-tuned models/public APIs before deployment in any business usecase. People often end up using GPT4 Autograding on the final LLM responses to generate these reports before deployment. While GPT4 autograding responses may make sense when a developer or a business person is reviewing pipeline performance manually, the approach is stupid and expensive when scaling to a benchmark of even 100 questions on private datasets.
 
-#### Why is it an expensive idea?
-To make it super clear why this is an expensive process, lets do some quick math. Lets say you have 5 prompt variations each that you want to test out on 5 LLMs (GPT 3.5 + 3 fine-tuned + 1 hugging face public model) on say 100 questions, you end up with a GPT4 autograding bill of **$2500\*(0.01\*3+0.03) = $150**. For context, you could literally hire a human annotator with a grading script for 2500 question-answer pairs at **$5/hr\*20hr = $100**.
+### Why is it expensive?
+To make it super clear why this is an expensive process, lets do some quick math. Lets say you have 5 prompt variations each that you want to test out on 5 LLMs (GPT 3.5 + 3 fine-tuned + 1 hugging face public model) on say 100 questions, you end up with a GPT4 autograding bill of **$2500\*(0.01\*3+0.03) = $150**. For context, you could literally hire a human annotator with a grading script for evaluating 2500 question-answer pairs at **$5/hr\*20hr = $100**.
 
-<img width="678" alt="GPT4 Autograding Pipeline" src="https://github.com/never2average/FrugalGrader/assets/31365087/e87090ed-2aeb-4fd1-ac87-a916827de546">
+<img width="1271" alt="Screenshot 2024-02-09 at 5 33 15 PM" src="https://github.com/never2average/FrugalGrader/assets/31365087/322d88e6-f791-4c72-a4c3-bb067588d99f">
 
 
-#### Why is it a stupid idea?
+### Why is it a stupid idea?
 - GPT4's autograding output is optimized for human reading and not further consumption into either RL pipelines or analytics dashboard.
 
 - Restricting GPT4 with system prompt to only answer with a single number value will be mostly wrong because the core value in the grading is when it can create a sequence of tokens to guide itself to the correct score.
@@ -20,7 +20,7 @@ To make it super clear why this is an expensive process, lets do some quick math
 - The final grading isnt normalized along any axis for scaling. For example: a grade of 4/10 isn't linearly related to 2/10. It does not even follow a log scale or someother mathematical scaling logic. So you will end up having to give the GPT4 feedback to a sentiment analysis BERT.
   
 
-#### Our [Hot]Fix
+### Our [Hot]Fix
 Most generative AI use-cases in enterprise right now including fields like financial services have a limited scope in instruction type with golden answers already in place for benchmarking.
 
 - Using a [cross-encoder model](https://www.sbert.net/examples/applications/cross-encoder/README.html) we can best determine the difference between LLM generated answer and the golden answer. This is well within the core competency of cross-encoder models that are trained on pairwise similarity tasks.
@@ -31,7 +31,7 @@ Most generative AI use-cases in enterprise right now including fields like finan
 
 - The model we have currently finetuned for internal usage is the [Quora Model](https://huggingface.co/cross-encoder/quora-roberta-large). While this works perfectly fine out of the box, we recommend running PEFT on ~1000 examples before deployment.
 
-#### Installation Instructions
+### Installation Instructions
 Step 1: [Install MongoDB](https://www.mongodb.com/docs/manual/installation/)
 
 Step 2: Check if Mongo is running properly on localhost
